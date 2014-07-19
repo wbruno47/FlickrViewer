@@ -43,16 +43,15 @@ public class FlickrViewerFragment extends Fragment {
 
     /**************
      *  Creates Fragment View
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
+     * @param inflater - inflater
+     * @param container - container
+     * @param savedInstanceState - saved state
+     * @return - view to be created
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.flickr_viewer_fragment, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.flickr_viewer_fragment, container, false);
     }
 
     @Override
@@ -62,6 +61,12 @@ public class FlickrViewerFragment extends Fragment {
 
         this.setGridViews();                //find GridView in layout, set listeners to grid view.
         this.initiateFlickrPhotoLoader();   //create photo helper object and have it start to download photo infomration.
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        flickrPhotoLoaderHelper.dismissLoaderDialog(); //check if task is still loading and dismiss dialog;
     }
 
     @Override
@@ -108,6 +113,7 @@ public class FlickrViewerFragment extends Fragment {
      * Find the view within the fragment that will be used.
      */
     public void setGridViews(){
+
         mGridView = (GridView) getView().findViewById(R.id.photo_grid_view);
         //Footer Button will only be displayed when the Grid View is at the bottom of the list.
         mFooterButton = (Button) getView().findViewById(R.id.footer_button);

@@ -76,6 +76,11 @@ public class FlickPhotoLoaderHelper {
         this.photoSetDoneLoading = doneLoading;
     }
 
+    public void dismissLoaderDialog(){
+        if (photoLoadTask != null){
+            photoLoadTask.dismissDialog();
+        }
+    }
 
     /**
      * *****************
@@ -98,14 +103,12 @@ public class FlickPhotoLoaderHelper {
          * if interface is set, call interface function.
          * set global photoLoadTask object to null.
          *
-         * @param aVoid
+         * @param aVoid - void
          */
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (progressDialog != null)
-                progressDialog.dismiss();
-
+            dismissDialog();
             if (photoSetDoneLoading != null) {
                 photoSetDoneLoading.onPhotoLoadingCompleted();
             }
@@ -173,6 +176,14 @@ public class FlickPhotoLoaderHelper {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        public void dismissDialog(){
+            if (progressDialog != null && progressDialog.isShowing()){
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
+
         }
     }
 
