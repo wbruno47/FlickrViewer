@@ -3,7 +3,7 @@ FlickrViewer
 
 Man View 
 -------------
-The main view of this app is to view photos from Flickr.  The set of photo you see will be the set returned for searching for te key work 'Android'.
+The main view of this app is to display photos from Flickr.  The set of photo you see will be the set returned for searching for the key work 'Android'.
 
 Photo Detail
 -------------
