@@ -28,10 +28,28 @@ public class FlickPhotoLoaderHelper {
     private JSONParser jsonParser;
     private PhotoLoadTask photoLoadTask;  //task to download and get photo information.
 
-    public FlickPhotoLoaderHelper(Context context) {
+    private String searchText;
+
+    public FlickPhotoLoaderHelper(Context context, String searchText) {
         mContext = context;
         photoList = new ArrayList<Photo>();
         jsonParser = new JSONParser();
+        this.searchText = searchText;
+    }
+
+    /**
+     * Search for the given text
+     * @param text  the text to do a new search for. If {@code null}, clear the search.
+     */
+    public void search(String text) {
+        //TODO
+    }
+
+    /**
+     * Loads new content
+     */
+    public void refresh() {
+        //TODO
     }
 
     /**
@@ -54,7 +72,7 @@ public class FlickPhotoLoaderHelper {
      * LoadInitialPhoto list gets the first set of Photo from flickr.
      */
     public void loadInitialPhotoList() {
-        photoLoadTask = new PhotoLoadTask(true);
+        photoLoadTask = new PhotoLoadTask(true, searchText);
         photoLoadTask.execute();
     }
 
@@ -64,7 +82,7 @@ public class FlickPhotoLoaderHelper {
      */
     public void loadNextPage() {
         lastPageLoaded++;
-        photoLoadTask = new PhotoLoadTask(false);
+        photoLoadTask = new PhotoLoadTask(false, searchText);
         photoLoadTask.execute();
     }
 
@@ -91,9 +109,16 @@ public class FlickPhotoLoaderHelper {
         private ProgressDialog progressDialog;  //progress bar.
         private boolean showProgress;           //boolean to show progress...progress is shown on initial load, not on 'load next page"
         private String apiUrlGetPhotos;         //the string used to get photo data.
+        private String searchText;
 
-        public PhotoLoadTask(boolean show) {  //send boolean to determine whether or not to show progress.
+        /**
+         * ???
+         * @param show          ???
+         * @param searchText    The text to search for, or {@code null} for no search filter.
+         */
+        public PhotoLoadTask(boolean show, String searchText) {  //send boolean to determine whether or not to show progress.
             showProgress = show;
+            this.searchText = searchText;
         }
 
         /**
@@ -137,7 +162,7 @@ public class FlickPhotoLoaderHelper {
             apiUrlGetPhotos =
                     String.format(FlickrConstants.apiUrlGetSearchPhotos,
                             FlickrConstants.API_KEY,
-                            FlickrConstants.searchTag,
+                            (searchText == null ? "" : ("&text=" + searchText)),
                             FlickrConstants.apiFormat,
                             FlickrConstants.searchPerPageCount,
                             lastPageLoaded);
