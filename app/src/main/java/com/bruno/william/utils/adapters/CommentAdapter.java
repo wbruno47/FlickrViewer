@@ -1,8 +1,6 @@
 package com.bruno.william.utils.adapters;
 
 import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +11,6 @@ import android.widget.TextView;
 import com.bruno.william.flickrviewr.R;
 import com.bruno.william.utils.classes.BitmapLoader;
 import com.bruno.william.utils.classes.Comment;
-import com.bruno.william.utils.classes.DownloadBitmapDrawable;
-import com.bruno.william.utils.classes.DownloadImageTask;
 import com.bruno.william.utils.holders.CommentHolder;
 
 import java.util.ArrayList;

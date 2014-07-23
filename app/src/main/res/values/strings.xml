@@ -5,6 +5,10 @@
     <string name="viewer_fragment_title">Android Flickr Gallery</string>
     <string name="button_footer">Get More Photos!</string>
 
+    <string name="search_result">Search Results:</string>
+    <string name="recent_photos">Recent Photos</string>
+    <string name="no_photos">No Photos!</string>
     <!-- Main Activity Menu Items -->
     <string name="refresh">Refresh</string>
+    <string name="search">Search</string>
 </resources>

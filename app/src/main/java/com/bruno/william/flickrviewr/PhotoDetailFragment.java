@@ -12,11 +12,9 @@ package com.bruno.william.flickrviewr;
 
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
