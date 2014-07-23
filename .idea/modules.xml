@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FlickrViewer.iml" filepath="$PROJECT_DIR$/FlickrViewer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/FlickrViewr.iml" filepath="$PROJECT_DIR$/FlickrViewr.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

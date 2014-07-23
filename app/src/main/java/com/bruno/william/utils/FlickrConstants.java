@@ -12,6 +12,9 @@ public class FlickrConstants {
 
     public final static String searchPerPageCount = "200";
 
+    public final static String methodSearchTextUrl="flickr.photos.search";
+    public final static String methodRecentPhotosUrl="flickr.photos.getRecent";  //will be used for empty text searches
+
     //apiUrl.....
     //These Strings are used to make calls to Flickr to get an appropriate JSON object
     //Make Search Query
@@ -22,7 +25,7 @@ public class FlickrConstants {
 
     //1= api 2 = search text 3 = format 4 = per page 5 = page number
     public final static String apiUrlGetSearchPhotos =
-           "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=%s%s&format=%s&per_page=%s&page=%s&sort=relevance&safe_search=1";
+           "https://api.flickr.com/services/rest/?method=%s&api_key=%s%s&format=%s&per_page=%s&page=%s&sort=relevance&safe_search=1";
     //public final static String apiUrlGetRecentPhotos =
      //       "https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=%s&format=%s&per_page=%s";//14487514250
 
