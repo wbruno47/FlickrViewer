@@ -4,4 +4,7 @@
     <string name="app_name">FlickrViewr</string>
     <string name="viewer_fragment_title">Android Flickr Gallery</string>
     <string name="button_footer">Get More Photos!</string>
+
+    <!-- Main Activity Menu Items -->
+    <string name="refresh">Refresh</string>
 </resources>

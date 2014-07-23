@@ -23,7 +23,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 
-import com.bruno.william.utils.FlickrConstants;
 import com.bruno.william.utils.adapters.FlickrPhotoAdapter;
 import com.bruno.william.utils.classes.FlickPhotoLoaderHelper;
 import com.bruno.william.utils.classes.Photo;
@@ -87,7 +86,7 @@ public class FlickrViewerFragment extends Fragment {
      *
      *****************************************/
     public void initiateFlickrPhotoLoader() {
-        flickrPhotoLoaderHelper = new FlickPhotoLoaderHelper(getActivity(), FlickrConstants.searchTag);
+        flickrPhotoLoaderHelper = new FlickPhotoLoaderHelper(getActivity(), null);
         flickrPhotoAdapter = new FlickrPhotoAdapter(getActivity(), flickrPhotoLoaderHelper.getPhotoList());
         mGridView.setAdapter(flickrPhotoAdapter);
 
@@ -109,6 +108,15 @@ public class FlickrViewerFragment extends Fragment {
         });
 
         flickrPhotoLoaderHelper.loadInitialPhotoList(); //Loads first set of data
+    }
+
+    /*********************************************************************
+     * Refresh Photo Loader
+     * This function will refresh the photo list that is displayed.
+     **********************************************************************/
+    public void refreshPhotoLoader() {
+        if (!flickrPhotoLoaderHelper.isLoading())  //If there is not a process to get images
+            flickrPhotoLoaderHelper.refresh(); //then refresh the photo list.
     }
 
     /*************************************************************

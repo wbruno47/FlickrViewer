@@ -49,7 +49,7 @@ public class FlickrPhotoAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageHolder holder;             //Image Holder.
+        ImageHolder holder;                       //Image Holder.
         //Photo photo = items.getPhoto(position); //Photo that is to be displayed.
         Photo photo = items.get(position);
 

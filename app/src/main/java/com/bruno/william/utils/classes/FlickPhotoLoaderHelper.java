@@ -49,7 +49,12 @@ public class FlickPhotoLoaderHelper {
      * Loads new content
      */
     public void refresh() {
-        //TODO
+        if (photoList == null){
+            photoList = new ArrayList<Photo>();
+        } else {
+            photoList.clear();     //clear the photo list because the background task adds to the list.
+        }
+        loadInitialPhotoList();
     }
 
     /**
@@ -161,11 +166,13 @@ public class FlickPhotoLoaderHelper {
             //1= api 2 = search text 3 = format 4 = per page 5 = page number
             apiUrlGetPhotos =
                     String.format(FlickrConstants.apiUrlGetSearchPhotos,
+                            (searchText == null ? FlickrConstants.methodRecentPhotosUrl : FlickrConstants.methodSearchTextUrl),
                             FlickrConstants.API_KEY,
                             (searchText == null ? "" : ("&text=" + searchText)),
                             FlickrConstants.apiFormat,
                             FlickrConstants.searchPerPageCount,
                             lastPageLoaded);
+            Log.d("FLICK", "URL : " + apiUrlGetPhotos);
             // String.format(FlickrConstants.apiUrlGetRecentPhotos, FlickrConstants.API_KEY, FlickrConstants.apiFormat, FlickrConstants.searchPerPageCount));
 
         }
