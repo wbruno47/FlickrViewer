@@ -69,7 +69,7 @@ public class Comment implements Parcelable {
     public static final Parcelable.Creator<Comment> CREATOR = new Parcelable.Creator<Comment>()
     {
 
-        /** Construct and return an Message from a Parcel*/
+        /** Construct and return Comment from a Parcel*/
         @Override
         public Comment createFromParcel(Parcel in)
         {
@@ -77,7 +77,7 @@ public class Comment implements Parcelable {
         }
 
         /**
-         * Creates a new array of Messages
+         * Creates a new array of Comments
          */
         @Override
         public Comment[] newArray(int size)
