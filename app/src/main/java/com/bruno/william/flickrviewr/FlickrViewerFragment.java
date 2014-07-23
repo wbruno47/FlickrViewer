@@ -22,6 +22,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.bruno.william.utils.adapters.FlickrPhotoAdapter;
 import com.bruno.william.utils.classes.FlickPhotoLoaderHelper;
@@ -32,19 +33,23 @@ public class FlickrViewerFragment extends Fragment {
     private FlickrPhotoAdapter flickrPhotoAdapter; //gridview adapter
 
     private GridView mGridView;
+
+    private TextView mHeaderText; //Header shows what you searched for, or "Recent Photos" if no search was done.
     private Button mFooterButton;  //Button shows "more photos" when you scroll to the end of gridview.
 
     private Parcelable gridViewInfo; //stores GridView info on Screen Orientation switch, etc....
 
     //Empty Constructor.
-    public FlickrViewerFragment(){
+    public FlickrViewerFragment() {
 
     }
 
-    /**************
-     *  Creates Fragment View
-     * @param inflater - inflater
-     * @param container - container
+    /**
+     * ***********
+     * Creates Fragment View
+     *
+     * @param inflater           - inflater
+     * @param container          - container
      * @param savedInstanceState - saved state
      * @return - view to be created
      */
@@ -76,15 +81,17 @@ public class FlickrViewerFragment extends Fragment {
         //TODO save photo list so it doesn't refresh after orientation change
     }
 
-    /*****************************************
+    /**
+     * **************************************
      * Create the Flickr Photo Helper object
      * Create the Grid View Adapter to show flickr photos
      * Set adapter to Gridview.
      * Set interface so when the Task of downloading photo information is complete, the
      * Grid View adapter can be updated.
-     *
-     *
-     *****************************************/
+     * <p/>
+     * <p/>
+     * ***************************************
+     */
     public void initiateFlickrPhotoLoader() {
         flickrPhotoLoaderHelper = new FlickPhotoLoaderHelper(getActivity(), null);
         flickrPhotoAdapter = new FlickrPhotoAdapter(getActivity(), flickrPhotoLoaderHelper.getPhotoList());
@@ -98,6 +105,7 @@ public class FlickrViewerFragment extends Fragment {
                 //When task is done, make sure to notify adapter that there are new object
                 //in the Grid View
                 flickrPhotoAdapter.notifyDataSetChanged();
+                setHeaderText();
 
                 if (gridViewInfo != null) { //If there was a saved state for the grid view
                     //make sure to restore it so the user stays in same spot for screen changes, etc....
@@ -110,31 +118,50 @@ public class FlickrViewerFragment extends Fragment {
         flickrPhotoLoaderHelper.loadInitialPhotoList(); //Loads first set of data
     }
 
-    /*********************************************************************
+    public void setHeaderText() {
+        mHeaderText.setText(flickrPhotoLoaderHelper.getSearchText() == null ?
+                getString(R.string.recent_photos) :
+                getString(R.string.search_result) + " " + flickrPhotoLoaderHelper.getSearchText().replace('+',' '));
+
+        if (flickrPhotoAdapter.getCount() == 0){
+            //if there are no photos in the set, add that there are no photos to header.
+            mHeaderText.append(" (" + getString(R.string.no_photos) + ")");
+        }
+    }
+
+    /*************************************************************
      * Refresh Photo Loader
      * This function will refresh the photo list that is displayed.
-     **********************************************************************/
+     * ********************************************************************
+     */
     public void refreshPhotoLoader() {
         if (!flickrPhotoLoaderHelper.isLoading())  //If there is not a process to get images
             flickrPhotoLoaderHelper.refresh(); //then refresh the photo list.
     }
 
-    /*************************************************************
+    public void searchPhotos(String searchText) {
+        flickrPhotoLoaderHelper.search(searchText);
+    }
+
+    /**
+     * **********************************************************
      * Find the view within the fragment that will be used.
      */
-    public void setGridViews(){
+    public void setGridViews() {
 
         mGridView = (GridView) getView().findViewById(R.id.photo_grid_view);
+        mHeaderText = (TextView) getView().findViewById(R.id.flickr_viewer_title);
+
         //Footer Button will only be displayed when the Grid View is at the bottom of the list.
         mFooterButton = (Button) getView().findViewById(R.id.footer_button);
         mFooterButton.setVisibility(View.GONE);
 
-        //Click Listener for Grid View.  When a photo is clicked display the "Photo Detail" fragment.
+        //Click Listener for Grid View.  When a photo is clicked  display the "Photo Detail" fragment.
         //this will show a larger image, the username, and comments related to the photo.
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((MainActivity)getActivity()).loadDetailedInformation((Photo) flickrPhotoAdapter.getItem(position));
+                ((MainActivity) getActivity()).loadDetailedInformation((Photo) flickrPhotoAdapter.getItem(position));
             }
         });
 
@@ -148,8 +175,7 @@ public class FlickrViewerFragment extends Fragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem + visibleItemCount == totalItemCount
-                        && totalItemCount != 0) {
+                if ((firstVisibleItem + visibleItemCount == totalItemCount) && totalItemCount != 0) {
                     // last item in grid is on the screen, show footer:
                     mFooterButton.setVisibility(View.VISIBLE);
                     mFooterButton.setAlpha(.9f);
@@ -160,6 +186,7 @@ public class FlickrViewerFragment extends Fragment {
             }
         });
 
+        //mGridView.setVisibility(View.GONE);
         //Footer button adds mor photos to the Grid View.
         mFooterButton.setOnClickListener(new View.OnClickListener() {
             @Override

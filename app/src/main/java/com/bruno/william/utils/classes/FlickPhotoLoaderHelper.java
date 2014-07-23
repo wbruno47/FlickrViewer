@@ -42,23 +42,29 @@ public class FlickPhotoLoaderHelper {
      * @param text  the text to do a new search for. If {@code null}, clear the search.
      */
     public void search(String text) {
-        //TODO
+        photoListReset();
+        searchText = text;
+        PhotoLoadTask photoLoadTask = new PhotoLoadTask(true, searchText);
+        photoLoadTask.execute();
     }
 
     /**
      * Loads new content
      */
     public void refresh() {
+        photoListReset();
+        loadInitialPhotoList();
+    }
+
+    //Clear photoList Array
+    public void photoListReset(){
         if (photoList == null){
             photoList = new ArrayList<Photo>();
         } else {
             photoList.clear();     //clear the photo list because the background task adds to the list.
         }
-        loadInitialPhotoList();
     }
-
-    /**
-     * ***********
+    /*************
      * Function to see if current Photo Download Task is running.
      *
      * @return - if the AsyncTask is Running.
@@ -89,6 +95,10 @@ public class FlickPhotoLoaderHelper {
         lastPageLoaded++;
         photoLoadTask = new PhotoLoadTask(false, searchText);
         photoLoadTask.execute();
+    }
+
+    public String getSearchText(){
+        return searchText;
     }
 
     public ArrayList<Photo> getPhotoList() {
@@ -172,7 +182,7 @@ public class FlickPhotoLoaderHelper {
                             FlickrConstants.apiFormat,
                             FlickrConstants.searchPerPageCount,
                             lastPageLoaded);
-            Log.d("FLICK", "URL : " + apiUrlGetPhotos);
+            //Log.d("FLICK", "URL : " + apiUrlGetPhotos);
             // String.format(FlickrConstants.apiUrlGetRecentPhotos, FlickrConstants.API_KEY, FlickrConstants.apiFormat, FlickrConstants.searchPerPageCount));
 
         }
