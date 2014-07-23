@@ -3,6 +3,8 @@ package com.bruno.william.utils.classes;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.bruno.william.utils.FlickrConstants;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
  * FlickPhotoLoaderHelper is used to gather Photo Information from Flickr to be
  * displayed in a Grid View
  */
-public class FlickPhotoLoaderHelper {
+public class FlickPhotoLoaderHelper implements Parcelable{
     private Context mContext;
 
     private ArrayList<Photo> photoList;     //List of Photos to be displayed
@@ -37,6 +39,22 @@ public class FlickPhotoLoaderHelper {
         this.searchText = searchText;
     }
 
+    public FlickPhotoLoaderHelper(Parcel in) {
+        if(photoList == null)
+            photoList = new ArrayList<Photo>();
+        else
+            photoList.clear();
+
+        in.readTypedList(photoList, Photo.CREATOR);
+        lastPageLoaded = in.readInt();
+        searchText = in.readString();
+
+        jsonParser = new JSONParser();
+    }
+
+    public void setContext(Context context){
+        mContext = context;
+    }
     /**
      * Search for the given text
      * @param text  the text to do a new search for. If {@code null}, clear the search.
@@ -113,6 +131,38 @@ public class FlickPhotoLoaderHelper {
         if (photoLoadTask != null){
             photoLoadTask.dismissDialog();
         }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Parcelable.Creator<FlickPhotoLoaderHelper> CREATOR = new Parcelable.Creator<FlickPhotoLoaderHelper>()
+    {
+
+        /** Construct and return Photo from a Parcel*/
+        @Override
+        public FlickPhotoLoaderHelper createFromParcel(Parcel in)
+        {
+            return new FlickPhotoLoaderHelper(in);
+        }
+
+        /**
+         * Creates a new array of Photos
+         */
+        @Override
+        public FlickPhotoLoaderHelper[] newArray(int size)
+        {
+            return new FlickPhotoLoaderHelper[size];
+        }
+    };
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(photoList);
+        dest.writeInt(lastPageLoaded);
+        dest.writeString(searchText);
     }
 
     /**
