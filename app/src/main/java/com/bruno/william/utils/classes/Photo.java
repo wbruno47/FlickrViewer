@@ -1,6 +1,7 @@
 package com.bruno.william.utils.classes;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by wbruno47 on 7/16/2014.
@@ -9,7 +10,7 @@ import java.io.Serializable;
  * Thumbnail is displayed in gridview (main activity)
  * Detail is larger image used when viewing photo details.
  */
-public class Photo implements Serializable {
+public class Photo implements Parcelable {
     private String id;      //photo id
     private String userId;  //user id (of author)
 
@@ -27,6 +28,19 @@ public class Photo implements Serializable {
     public Photo(String newId, String newUserId) {
         id = newId;
         userId = newUserId;
+    }
+
+    //Constructor to read parcel
+    public Photo(Parcel in) {
+        id = in.readString();
+        userId = in.readString();
+
+        secret = in.readString();
+        server = in.readString();
+        farm = in.readString();
+
+        thumbnailUrl = in.readString();
+        detailImageUrl = in.readString();
     }
 
     public String getThumbnailUrl() {
@@ -74,4 +88,41 @@ public class Photo implements Serializable {
         //_s == thumbnail;
         thumbnailUrl = "https://farm" + farm + ".staticflickr.com/" + server + "/" + id + "_" + secret + "_s.jpg";
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(userId);
+        dest.writeString(secret);
+        dest.writeString(server);
+        dest.writeString(farm);
+        dest.writeString(thumbnailUrl);
+        dest.writeString(detailImageUrl);
+    }
+
+    public static final Parcelable.Creator<Photo> CREATOR = new Parcelable.Creator<Photo>()
+    {
+
+        /** Construct and return an Message from a Parcel*/
+        @Override
+        public Photo createFromParcel(Parcel in)
+        {
+            return new Photo(in);
+        }
+
+        /**
+         * Creates a new array of Messages
+         */
+        @Override
+        public Photo[] newArray(int size)
+        {
+            return new Photo[size];
+        }
+    };
+
 }
