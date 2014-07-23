@@ -16,6 +16,10 @@ import android.os.Bundle;
 
 import com.bruno.william.utils.classes.Photo;
 
+import self.philbrown.droidQuery.$;
+import self.philbrown.droidQuery.AjaxCache;
+import self.philbrown.droidQuery.AjaxOptions;
+
 
 public class MainActivity extends Activity {
     public static final long ANIMATION_DURATION_SHORT = 200;  //for the fade animations throughout the app
@@ -34,6 +38,8 @@ public class MainActivity extends Activity {
                     .add(R.id.container, new FlickrViewerFragment())
                     .commit();
         }
+
+        $.ajaxSetup(new AjaxOptions().cache(true).cacheTimeout(AjaxCache.TIMEOUT_NEVER));
     }
 
     /**********************************************

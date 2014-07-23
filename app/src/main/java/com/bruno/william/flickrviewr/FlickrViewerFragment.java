@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 
+import com.bruno.william.utils.FlickrConstants;
 import com.bruno.william.utils.adapters.FlickrPhotoAdapter;
 import com.bruno.william.utils.classes.FlickPhotoLoaderHelper;
 import com.bruno.william.utils.classes.Photo;
@@ -73,6 +74,7 @@ public class FlickrViewerFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         gridViewInfo = mGridView.onSaveInstanceState(); //save state of grid view to keep user in same spot for screen changes, etc.
+        //TODO save photo list so it doesn't refresh after orientation change
     }
 
     /*****************************************
@@ -85,7 +87,7 @@ public class FlickrViewerFragment extends Fragment {
      *
      *****************************************/
     public void initiateFlickrPhotoLoader() {
-        flickrPhotoLoaderHelper = new FlickPhotoLoaderHelper(getActivity());
+        flickrPhotoLoaderHelper = new FlickPhotoLoaderHelper(getActivity(), FlickrConstants.searchTag);
         flickrPhotoAdapter = new FlickrPhotoAdapter(getActivity(), flickrPhotoLoaderHelper.getPhotoList());
         mGridView.setAdapter(flickrPhotoAdapter);
 

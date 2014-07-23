@@ -11,6 +11,9 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 
+import self.philbrown.droidQuery.AjaxCache;
+import self.philbrown.droidQuery.AjaxOptions;
+
 /**
  * Created by wbruno47 on 7/18/2014.
  */
@@ -29,12 +32,19 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         return getBitmapFromUrl(params[0]);
     }
 
+    /** The URL used to download the image. */
+    private String url;
+
     /****************
      * Download Bitmap
      * @param url - url to download bitmap from
      * @return - Bitmap
      */
     public Bitmap getBitmapFromUrl(String url) {
+        this.url = url;
+        Bitmap bmp = (Bitmap) AjaxCache.sharedCache().getCachedResponse(new AjaxOptions().url(url));
+        if (bmp != null)
+            return bmp;
         InputStream inputStream;
         try {
             inputStream = new URL(url).openStream();
@@ -60,6 +70,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
                 final DownloadImageTask downloadImageTask = getDownloadImageTask(imageView); //get the download task from the image view.
                 if (this == downloadImageTask && imageView != null) {  //if this is the current task then set the downloaded image.
                     imageView.setImageBitmap(bitmap);
+                    AjaxCache.sharedCache().cacheResponse(bitmap, new AjaxOptions().url(url));
                 }
             }
         }
