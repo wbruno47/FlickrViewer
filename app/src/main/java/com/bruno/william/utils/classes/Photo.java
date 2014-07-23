@@ -108,7 +108,7 @@ public class Photo implements Parcelable {
     public static final Parcelable.Creator<Photo> CREATOR = new Parcelable.Creator<Photo>()
     {
 
-        /** Construct and return an Message from a Parcel*/
+        /** Construct and return Photo from a Parcel*/
         @Override
         public Photo createFromParcel(Parcel in)
         {
@@ -116,7 +116,7 @@ public class Photo implements Parcelable {
         }
 
         /**
-         * Creates a new array of Messages
+         * Creates a new array of Photos
          */
         @Override
         public Photo[] newArray(int size)
