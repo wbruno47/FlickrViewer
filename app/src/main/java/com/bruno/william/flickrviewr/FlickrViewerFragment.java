@@ -65,10 +65,6 @@ public class FlickrViewerFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //setRetainInstance(true);
-
-        if (savedInstanceState != null){
-            Log.d("Flick", "savedInstanceState is full");
-        }
         this.setGridViews();                //find GridView in layout, set listeners to grid view.
 
         if(savedInstanceState == null){
@@ -84,6 +80,7 @@ public class FlickrViewerFragment extends Fragment {
             flickrPhotoAdapter = new FlickrPhotoAdapter(getActivity(), flickrPhotoLoaderHelper.getPhotoList());
 
             mGridView.onRestoreInstanceState(gridViewInfo);  //set GridView to where it last was before screen change.
+            gridViewInfo = null;                            //
             mGridView.setAdapter(flickrPhotoAdapter);       //make sure adapter is set to Grid View.
             setHeaderText();
         }
