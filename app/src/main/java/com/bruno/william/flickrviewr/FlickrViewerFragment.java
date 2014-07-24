@@ -15,6 +15,7 @@ package com.bruno.william.flickrviewr;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import android.widget.TextView;
 import com.bruno.william.utils.adapters.FlickrPhotoAdapter;
 import com.bruno.william.utils.classes.FlickPhotoLoaderHelper;
 import com.bruno.william.utils.classes.Photo;
+
+import java.util.logging.FileHandler;
 
 public class FlickrViewerFragment extends Fragment {
     private FlickPhotoLoaderHelper flickrPhotoLoaderHelper;  //helper class to download photo info.
@@ -44,8 +47,7 @@ public class FlickrViewerFragment extends Fragment {
 
     }
 
-    /**
-     * ***********
+    /************
      * Creates Fragment View
      *
      * @param inflater           - inflater
@@ -62,10 +64,26 @@ public class FlickrViewerFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setRetainInstance(true);
-
+        //setRetainInstance(true);
         this.setGridViews();                //find GridView in layout, set listeners to grid view.
-        this.initiateFlickrPhotoLoader();   //create photo helper object and have it start to download photo infomration.
+
+        if(savedInstanceState == null){
+            this.initiateFlickrPhotoLoader();   //create photo helper object and have it start to download photo information.
+        } else {
+            //Data was saved for screen orientation,etc...
+            flickrPhotoLoaderHelper = savedInstanceState.getParcelable("helper");
+            gridViewInfo = savedInstanceState.getParcelable("gridInfo");
+
+            flickrPhotoLoaderHelper.setPhotoSetDoneLoading(photoSetDoneLoading); //reset photo download task interface
+            flickrPhotoLoaderHelper.setContext(getActivity());  //reset context.
+
+            flickrPhotoAdapter = new FlickrPhotoAdapter(getActivity(), flickrPhotoLoaderHelper.getPhotoList());
+
+            mGridView.onRestoreInstanceState(gridViewInfo);  //set GridView to where it last was before screen change.
+            gridViewInfo = null;                            //
+            mGridView.setAdapter(flickrPhotoAdapter);       //make sure adapter is set to Grid View.
+            setHeaderText();
+        }
     }
 
     @Override
@@ -77,12 +95,29 @@ public class FlickrViewerFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        gridViewInfo = mGridView.onSaveInstanceState(); //save state of grid view to keep user in same spot for screen changes, etc.
-        //TODO save photo list so it doesn't refresh after orientation change
+        //gridViewInfo = mGridView.onSaveInstanceState(); //save state of grid view to keep user in same spot for screen changes, etc.
+        outState.putParcelable("gridInfo", mGridView.onSaveInstanceState());
+        outState.putParcelable("helper", flickrPhotoLoaderHelper);
     }
 
-    /**
-     * **************************************
+    private FlickPhotoLoaderHelper.PhotoSetDoneLoading photoSetDoneLoading = new FlickPhotoLoaderHelper.PhotoSetDoneLoading() {
+
+        //Function called when the asynctask that gets photo information is complete.
+        @Override
+        public void onPhotoLoadingCompleted() {
+            //When task is done, make sure to notify adapter that there are new object
+            //in the Grid View
+            flickrPhotoAdapter.notifyDataSetChanged();
+            setHeaderText();
+
+            if (gridViewInfo != null) { //If there was a saved state for the grid view
+                //make sure to restore it so the user stays in same spot for screen changes, etc....
+                mGridView.onRestoreInstanceState(gridViewInfo);
+                gridViewInfo = null;
+            }
+        }
+    };
+    /*************************************
      * Create the Flickr Photo Helper object
      * Create the Grid View Adapter to show flickr photos
      * Set adapter to Gridview.
@@ -97,23 +132,7 @@ public class FlickrViewerFragment extends Fragment {
         flickrPhotoAdapter = new FlickrPhotoAdapter(getActivity(), flickrPhotoLoaderHelper.getPhotoList());
         mGridView.setAdapter(flickrPhotoAdapter);
 
-        flickrPhotoLoaderHelper.setPhotoSetDoneLoading(new FlickPhotoLoaderHelper.PhotoSetDoneLoading() {
-
-            //Function called when the asynctask that gets photo information is complete.
-            @Override
-            public void onPhotoLoadingCompleted() {
-                //When task is done, make sure to notify adapter that there are new object
-                //in the Grid View
-                flickrPhotoAdapter.notifyDataSetChanged();
-                setHeaderText();
-
-                if (gridViewInfo != null) { //If there was a saved state for the grid view
-                    //make sure to restore it so the user stays in same spot for screen changes, etc....
-                    mGridView.onRestoreInstanceState(gridViewInfo);
-                    gridViewInfo = null;
-                }
-            }
-        });
+        flickrPhotoLoaderHelper.setPhotoSetDoneLoading(photoSetDoneLoading);
 
         flickrPhotoLoaderHelper.loadInitialPhotoList(); //Loads first set of data
     }

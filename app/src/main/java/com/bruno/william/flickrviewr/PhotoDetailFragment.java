@@ -123,7 +123,8 @@ public class PhotoDetailFragment extends Fragment {
      *  Again, right now LoadDetailTask primarily just finds the user name.
      ************************************************************************/
     public void loadPhotoDetails() {
-        Photo photo = (Photo) getArguments().getSerializable(KEY_PHOTO);
+        //Photo photo = (Photo) getArguments().getSerializable(KEY_PHOTO);
+        Photo photo = getArguments().getParcelable(KEY_PHOTO);
         photoInformation = new PhotoInformation(photo);
         LoadDetailedInformationTask task = new LoadDetailedInformationTask();
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null); //run tasks parallel

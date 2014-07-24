@@ -63,7 +63,8 @@ public class MainActivity extends Activity {
      */
     public void loadDetailedInformation(Photo photo) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(PhotoDetailFragment.KEY_PHOTO, photo);
+        //bundle.putSerializable(PhotoDetailFragment.KEY_PHOTO, photo);
+        bundle.putParcelable(PhotoDetailFragment.KEY_PHOTO, photo);
 
         photoDetailFragment = new PhotoDetailFragment();
         photoDetailFragment.setArguments(bundle);
